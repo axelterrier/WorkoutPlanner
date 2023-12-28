@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Exercice = require('./model/Exercice');
+const Seance = require('./model/Seance');
 const app = express();
 
 // Middleware pour parser le JSON
@@ -114,5 +115,21 @@ app.get('/exercices/equipement/:nomEquipement', async (req, res) => {
     }
   } catch (err) {
     res.status(500).send('Erreur lors de la récupération des exercices pour l\'équipement spécifié: ' + err.message);
+  }
+});
+
+app.post('/seance/create', async (req, res) => {
+  try {
+      // Créer une nouvelle séance avec les données reçues dans le corps de la requête
+      const nouvelleSeance = new Seance(req.body);
+
+      // Enregistrer la séance dans la base de données
+      await nouvelleSeance.save();
+
+      // Envoyer une réponse réussie
+      res.status(201).json(nouvelleSeance);
+  } catch (err) {
+      // Gérer les erreurs
+      res.status(400).send('Erreur lors de la création de la séance: ' + err.message);
   }
 });
